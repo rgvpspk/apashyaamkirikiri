@@ -1,0 +1,515 @@
+a) FCFS
+
+#include<stdio.h>
+void main()
+{
+int wt[20]={0},bt[20]={0},tat[20]={0},n,i,swt=0,stat=0;
+float awt,atat;
+printf("Enter the no of processes:");
+scanf("%d",&n);
+printf("Enter the burst times: ");
+for(i=0;i<n;i++)
+{
+scanf("%d",&bt[i]);
+}
+wt[0]=0;
+for(i=1;i<n;i++)
+{
+wt[i]=bt[i-1]+wt[i-1];
+}
+for(i=0;i<n;i++)
+{
+tat[i]=wt[i]+bt[i];
+}
+for(i=0;i<n;i++)
+{
+swt=swt+wt[i];
+}
+awt=swt/n;
+for(i=0;i<n;i++)
+{
+stat=stat+tat[i];
+}
+atat=stat/n;
+printf("Process\tBT\tWT\tTAT");
+printf("\n-----------------------------------");
+for(i=0;i<n;i++)
+{
+printf("\n P%d \t%d\t%d \t%d",i+1,bt[i], wt[i], tat[i]);
+}
+printf("\n-----------------------------------");
+printf("\t(ATAT)%f \t(AWT)%f\n",atat,awt);
+printf("-----------------------------------");
+}
+
+
+
+
+
+
+
+
+b) SJF
+
+#include<stdio.h>
+void main()
+{
+int wt[20] ={0}, bt[20]={0}, tat[20]={0}, i, swt=0, stat=0, max, j,
+n, p[20],m;
+float awt,atat;
+printf("Enter the no of processes:");
+scanf("%d",&n);
+printf("Enter the burst times: ");
+for(i=0;i<n;i++)
+{
+scanf("%d",&bt[i]);
+}
+printf("Enter the processes number: ");
+for(i=0;i<n;i++)
+{
+scanf("%d",&p[i]);
+}
+for(i=0;i<n;i++)
+{
+for(j=i+1;j<n;j++)
+{
+if(bt[i]>bt[j])
+{
+max=bt[i];
+m=p[i];
+bt[i]=bt[j];
+p[i]=p[j];
+bt[j]=max;
+p[j]=m;
+}
+}
+}
+wt[0]=0;
+for(i=1;i<n;i++)
+{
+wt[i]=bt[i-1]+wt[i-1];
+}
+for(i=0;i<n;i++)
+{
+tat[i]=wt[i]+bt[i];
+}
+for(i=0;i<n;i++)
+{
+swt=swt+wt[i];
+stat=stat+tat[i];
+}
+awt=swt/n;
+atat=stat/n;
+printf("Process\tBT\tWT\tTAT");
+printf("\n-----------------------------------");
+for(i=0;i<n;i++)
+{
+printf("\n %d \t%d\t%d \t%d",p[i],bt[i], wt[i], tat[i]);
+}
+printf("\n-----------------------------------");
+printf("\n \t(ATAT)%f %f(AWT)\n",atat,awt);
+printf("-----------------------------------");
+}
+
+
+
+
+
+
+
+c) Round Robin
+
+#include<stdio.h>
+void main()
+{
+int p[20],bt[20]={0},tat[20]={0},wt[20]={0},i,temp=0,ct[20]={0},max,stat=0,swt=0,n,tmslc,j;
+float awt, atat;
+printf("Enter the no of processes:");
+scanf("%d",&n);
+printf("Enter the processes number:");
+for(i=0;i<n;i++)
+{
+scanf("%d",&p[i]);
+}
+printf("Enter the burst times:");
+for(i=0;i<n;i++)
+{
+scanf("%d",&bt[i]);
+ct[i]=bt[i];
+}
+printf("Enter the tmslc:");
+scanf("%d",&tmslc);
+max=bt[0];
+for(i=1;i<n;i++)
+{
+if(max<bt[i])
+max=bt[i];
+}
+for(j=0;j<(max/tmslc)+1;j++)
+{
+for(i=0;i<n;i++)
+{
+if(bt[i]!=0)
+{
+if(bt[i]<=tmslc)
+{
+tat[i]=temp+bt[i];
+temp=temp+bt[i];
+bt[i]=0;
+}
+else
+{
+bt[i]=bt[i]-tmslc;
+temp=temp+tmslc;
+}
+}
+}
+}
+for(i=0;i<n;i++)
+{
+wt[i]=tat[i]-ct[i];
+stat+=tat[i];
+swt+=wt[i];
+}
+atat=(float)stat/n;
+awt=(float)swt/n;
+printf("Process\tBT\tWT\tTAT");
+printf("\n---------------------------------------");
+for(i=0;i<n;i++)
+{
+printf("\n P%d \t%d\t%d \t%d",p[i],ct[i],wt[i],tat[i]);
+}
+printf("\n---------------------------------------");
+printf("\n \t(AWT)%f %f(ATAT)\n",awt,atat);
+printf("\n---------------------------------------");
+}
+
+
+
+
+
+
+
+
+
+d) Priority:
+
+#include<stdio.h>
+void main()
+{
+int wt[20]={0},bt[20]={0},tat[20]={0},prty[20]={0},i,swt=0,stat=0,max,j,n,m,p[20],x;
+float awt,atat;
+printf("Enter the no. of processes:");
+scanf("%d",&n);
+printf("Enter the burst times:");
+for(i=0;i<n;i++)
+{
+scanf("%d",&bt[i]);
+}
+printf("\nEnter the priorities:");
+for(i=0;i<n;i++)
+{
+scanf("%d",&prty[i]);
+}
+printf("Enter the processes number:");
+for(i=0;i<n;i++)
+{
+scanf("%d",&p[i]);
+}
+for(i=0;i<n;i++)
+{
+for(j=i+1;j<n;j++)
+{
+if(prty[i]>prty[j])
+{
+max=prty[i];
+prty[i]=prty[j];
+prty[j]=max;
+m=p[i];
+p[i]=p[j];
+p[j]=m;
+x=bt[i];
+bt[i]=bt[j];
+bt[j]=x;
+}
+}
+}
+wt[0]=0;
+for(i=1;i<n;i++)
+{
+wt[i]=bt[i-1]+wt[i-1];
+}
+for(i=0;i<n;i++)
+{
+tat[i]=wt[i]+bt[i];
+}
+for(i=1;i<n;i++)
+{
+wt[i]=bt[i-1]+wt[i-1];
+tat[i]=wt[i]+bt[i];
+}
+for(i=0;i<n;i++)
+{
+swt=swt+wt[i];
+stat=stat+tat[i];
+}
+awt=swt/n;
+atat=stat/n;
+printf("Process\tBT\tWT\tTAT");
+printf("\n---------------------------------------");
+for(i=0;i<n;i++)
+{
+printf("\n P%d \t%d\t%d \t%d",p[i],bt[i],wt[i],tat[i]);
+}
+printf("\n---------------------------------------");
+printf("\n \t(AWT)%f %f(ATAT)\n",awt,atat);
+printf("\n---------------------------------------");
+}
+
+
+
+
+
+
+
+
+2.Write programs using the I/O system calls of UNIX/LINUX operating system (open,
+read, write, close, fcntl, seek, stat, opendir, readdir)
+
+a) Open and write
+
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<unistd.h>
+#include<stdio.h>
+void main()
+{
+int fd;
+fd=creat("n1",0666);
+if(fd!=-1)
+{
+fd=open("n1",O_WRONLY);
+if(fd==-1)
+{
+printf("Cannot open file");
+}
+write(fd,"This is OS Program",20);
+close(fd);
+}
+}
+
+b) Open and read
+
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<unistd.h>
+#include<stdio.h>
+void main()
+{
+int fd,n=1;
+char buf;
+fd=open("opening.c",O_RDONLY);
+if(fd==-1)
+{
+printf("File doesnot exist");
+}
+while(n>0)
+{
+n=read(fd,&buf,1);
+printf("%c",buf);
+}
+}
+
+c) Opendir and readdir
+
+#include<stdio.h>
+#include<dirent.h>
+void main(int argc,char **argv)
+{
+DIR *dp;
+struct dirent *link;
+dp=opendir(argv[1]);
+printf("Contents of the directory %s are \n",argv[1]);
+while((link=readdir(dp))!=0)
+{
+printf("%s\n",link->d_name);
+}
+closedir(dp);
+}
+
+d) Stat
+
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<unistd.h>
+#include<stdio.h>
+void main()
+{
+struct stat fs;
+if(stat("opening.c",&fs)==-1)
+{
+printf("Error in stat system call");
+}
+printf("No of links: %ld\n",fs.st_nlink);
+printf("Filesize: %ld bytes\n",fs.st_size);
+printf("File in ode: %ld\n",fs.st_ino);
+}
+
+e) seek_set
+
+#include<fcntl.h>
+#include<unistd.h>
+#include<sys/stat.h>
+#include<stdio.h>
+void main()
+{
+char buf;
+int fd=open("opening.c",O_RDONLY);
+lseek(fd,5,SEEK_SET);
+read(fd,&buf,1);
+printf("The char at offset 5=%c\n",buf);
+close(fd);
+}
+
+f) seek_cur
+
+#include<sys/types.h>
+#include<fcntl.h>
+#include<unistd.h>
+#include<sys/stat.h>
+#include<stdio.h>
+void main()
+{
+char buf;
+int fd=open("opening.c",O_RDONLY);
+lseek(fd, -5,SEEK_CUR);
+read(fd,&buf,1);
+printf("The char at offset 5=%c\n",buf);
+close(fd);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+3) Write a C program to simulate Bankers Algorithm for Deadlock Avoidance and Prevention
+
+#include<stdio.h>
+struct file
+{
+int all[10];
+int max[10];
+int need[10];
+int flag;
+};
+void main()
+{
+struct file f[10];
+int fl;
+int i,j,k,p,b,n,r,g,cnt=0,id,newr;
+int avail[10],seq[10];
+printf("Enter the no of processes--");
+scanf("%d",&n);
+printf("Enter the no of resources");
+scanf("%d",&r);
+for(i=0;i<n;i++)
+{
+printf("Enter the details for P%d\n",i);
+printf("Enter the allocation : ");
+for(j=0;j<r;j++)
+scanf("%d",&f[i].all[j]);
+printf("Enter the max: ");
+for(j=0;j<r;j++)
+scanf("%d",&f[i].max[j]);
+f[i].flag=0;
+}
+printf("\nEnter Available resources--\t");
+for(i=0;i<r;i++)
+scanf("%d",&avail[i]);
+printf("\nEnter new Request details--");
+printf("\nEnter the pid\t--");
+scanf("%d",&id);
+printf("\nEnter the request for resources--\t");
+for(i=0;i<r;i++)
+{
+scanf("%d",&newr);
+f[id].all[i]+=newr;
+avail[i]=avail[i]-newr;
+}
+for(i=0;i<n;i++)
+{
+for(j=0;j<r;j++)
+{
+f[i].need[j]=f[i].max[j]-f[i].all[j];
+if(f[i].need[j]<0)
+f[i].need[j]=0;
+}
+}
+cnt=0;
+fl=0;
+while(cnt!=n)
+{
+g=0;
+for(j=0;j<n;j++)
+{
+if(f[j].flag==0)
+{
+b=0;
+for(p=0;p<r;p++)
+{
+if(avail[p]>=f[j].need[p])
+b=b+1;
+else
+b=b-1;
+}
+if(b==r)
+{
+printf("\nP%d is visited",j);
+seq[fl++]=j;
+f[j].flag=1;
+for(k=0;k<r;k++)
+avail[k]=avail[k]+f[j].all[k];
+cnt=cnt+1;
+printf("(");
+for(k=0;k<r;k++)
+printf("%3d",avail[k]);
+printf(")");
+g=1;
+}
+}
+}
+if(g==0)
+{
+printf("\nREQUEST NOT GRANTED__DEADLOCK OCCURRED");
+printf("\nSYTEM IS IN UNSAFE STATE");
+goto y;
+}
+}
+printf("\nSYSTEM IS IN SAFE STATE");
+printf("\nThe safe sequence is __(");
+for(i=0;i<fl;i++)
+printf("P%d\t",seq[i]);
+printf(")");
+y:printf("\nProcess\t\tAllocation\t Max\t\t Need\n");
+for(i=0;i<n;i++)
+{
+printf("P%d\t",i);
+for(j=0;j<r;j++)
+printf("%6d",f[i].all[j]);
+for(j=0;j<r;j++)
+printf("%6d",f[i].max[j]);
+for(j=0;j<r;j++)
+printf("%6d",f[i].need[j]);
+printf("\n");
+}
+}
